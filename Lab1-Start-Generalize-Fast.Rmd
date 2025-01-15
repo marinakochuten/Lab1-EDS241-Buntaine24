@@ -256,6 +256,9 @@ m3_log <- lm(
 )
 
 summ(m3_log, model.fit = FALSE)
+
+# convert coefficient from log scale to percent change for interpretation
+exp(-.42)-1 # the treatment has 34% less waste piles
 ```
 
 ### Compare observed data to simulated data based on the fitted model (`m3_log`)
@@ -346,10 +349,12 @@ post_treat_subset %>%
 m4_control <- lm(
     log(waste_piles) ~ 
         treat + 
-        , ## Add control
+        pre_count_avg, ## Add control
     data = post_treat_subset)
 
 summ(m4_control, model.fit = FALSE)
+
+# my values here much different that adam's example
 
 ```
 
@@ -391,11 +396,12 @@ m5_control2 <- lm(
     log(waste_piles) ~ 
         treat +
         log(pre_count_avg) + 
-        , ## Add control
+        rain_0_48hrs + rain_49_168hrs, ## Add control
     data = post_treat_subset)
 
 summ(m5_control2,
-     model.fit = FALSE, )  ## Add heteroskedasticity robust standard error adj.
+     model.fit = FALSE, 
+     robust = "HC2")  ## Add heteroskedasticity robust standard error adj.
 ```
 
 ### Comparing models after adding controls
